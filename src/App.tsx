@@ -1,15 +1,13 @@
 import ProductCard from "./Components/ProductCard";
 import Modal from "./Components/ui/Modal";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { formInputsList, productList } from "./data";
 import Button from "./Components/ui/Button.tsx";
 import Input from "./Components/ui/Input.tsx";
 import { IProduct } from "./Interfaces/index.ts";
 
 function App() {
-  /* state*/
-  const [isOpen, setIsOpen] = useState(false);
-  const [product, setProduct] = useState<IProduct>({
+  const defaultProudectObj = {
     title: "",
     description: "",
     imageURL: "",
@@ -19,7 +17,10 @@ function App() {
       name: "",
       imageURL: "",
     },
-  });
+  };
+  /* state*/
+  const [isOpen, setIsOpen] = useState(false);
+  const [product, setProduct] = useState<IProduct>(defaultProudectObj);
 
   /*------- Handler ----------*/
   const open = () => setIsOpen(true);
@@ -30,6 +31,16 @@ function App() {
       ...product,
       [name]: value,
     });
+  };
+
+  const submitHandler = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    setProduct(defaultProudectObj);
+  };
+
+  const onCancel = () => {
+    setProduct(defaultProudectObj);
+    close();
   };
 
   // ** Render Product List **/
@@ -65,7 +76,7 @@ function App() {
         {renderProductList}
       </div>
       <Modal title="Add A New Product" close={close} isOpen={isOpen}>
-        <form className="space-y-3">
+        <form className="space-y-3" onSubmit={submitHandler}>
           {renderInputFeilds}
           <div className="flex items-center space-x-3">
             <Button
@@ -75,7 +86,7 @@ function App() {
             <Button
               className="text-white p-2  bg-red-700 rounded-md w-full "
               children="Cancel"
-              onClick={close}
+              onClick={onCancel}
             />
           </div>
         </form>
