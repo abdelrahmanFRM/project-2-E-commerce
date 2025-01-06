@@ -5,6 +5,9 @@ import { formInputsList, productList } from "./data";
 import Button from "./Components/ui/Button.tsx";
 import Input from "./Components/ui/Input.tsx";
 import { IProduct } from "./Interfaces/index.ts";
+import { productValidation } from "./validation/index.ts";
+import Errors from "./Components/ErrorMassage.tsx";
+import ErrorMassage from "./Components/ErrorMassage.tsx";
 
 function App() {
   const defaultProudectObj = {
@@ -21,6 +24,12 @@ function App() {
   /* state*/
   const [isOpen, setIsOpen] = useState(false);
   const [product, setProduct] = useState<IProduct>(defaultProudectObj);
+  const [errors, setErrors] = useState({
+    title: "",
+    description: "",
+    imageURL: "",
+    price: "",
+  });
 
   /*------- Handler ----------*/
   const open = () => setIsOpen(true);
@@ -31,11 +40,31 @@ function App() {
       ...product,
       [name]: value,
     });
+    setErrors({
+      ...errors,
+      [name]: "",
+    });
   };
 
   const submitHandler = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    setProduct(defaultProudectObj);
+    const { title, description, imageURL, price } = product;
+    const errors = productValidation({
+      title,
+      description,
+      imageURL,
+      price,
+    });
+
+    const hasErrorMsg =
+      Object.values(errors).some((value) => value === "") &&
+      Object.values(errors).every((value) => value === "");
+    console.log(hasErrorMsg);
+    if (!hasErrorMsg) {
+      setErrors(errors);
+      return;
+    }
+    console.log("send your data to your server");
   };
 
   const onCancel = () => {
@@ -61,14 +90,15 @@ function App() {
         value={product[input.name]}
         onChange={onChangeHandler}
       />
+      <ErrorMassage msg={errors[input.name]} />
     </div>
   ));
 
   return (
     <main className="container">
       <Button
-        className="text-white p-2 my-4 bg-indigo-700 rounded-md w-full "
-        children="ADD"
+        className="text-white p-2 my-4 bg-indigo-700 rounded-md w-full font-bold "
+        children="Build Product"
         onClick={open}
       />
 
