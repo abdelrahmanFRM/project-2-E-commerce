@@ -8,6 +8,7 @@ import { IProduct } from "./Interfaces/index.ts";
 import { productValidation } from "./validation/index.ts";
 import ErrorMassage from "./Components/ErrorMassage.tsx";
 import CircleColor from "./Components/CircleColor.tsx";
+import { v4 as uuid } from "uuid";
 
 function App() {
   const defaultProudectObj = {
@@ -22,6 +23,7 @@ function App() {
     },
   };
   /* state*/
+  const [products, setProducts] = useState<IProduct[]>(productList);
   const [isOpen, setIsOpen] = useState(false);
   const [product, setProduct] = useState<IProduct>(defaultProudectObj);
   const [tempColor, setTempColor] = useState<string[]>([]);
@@ -71,11 +73,17 @@ function App() {
       setErrors(errors);
       return;
     }
-    console.log("send your data to your server");
+    setProducts((prev) => [
+      ...prev,
+      { ...product, id: uuid(), colors: tempColor },
+    ]);
+    setProduct(defaultProudectObj);
+    setTempColor([]);
+    close();
   };
 
   // ** Render Product List **/
-  const renderProductList = productList.map((product) => (
+  const renderProductList = products.map((product) => (
     <ProductCard key={product.id} product={product} />
   ));
 
@@ -129,7 +137,7 @@ function App() {
         onClick={open}
       />
 
-      <div className=" bg-indigo-400 grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4">
+      <div className="px-3 bg-indigo-700 grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 ">
         {renderProductList}
       </div>
       <Modal title="Add A New Product" close={close} isOpen={isOpen}>
