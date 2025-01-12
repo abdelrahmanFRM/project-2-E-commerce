@@ -9,8 +9,14 @@ import { productValidation } from "./validation/index.ts";
 import ErrorMassage from "./Components/ErrorMassage.tsx";
 import CircleColor from "./Components/CircleColor.tsx";
 import { v4 as uuid } from "uuid";
+import Selector from "./Components/ui/Selector.tsx";
+
 
 function App() {
+
+
+
+
   const defaultProudectObj = {
     title: "",
     description: "",
@@ -107,6 +113,7 @@ function App() {
   /**render CircleColors */
   const renderCircleColor = colors.map((color) => (
     <CircleColor
+      key={color}
       color={color}
       onClick={() => {
         if (tempColor.includes(color)) {
@@ -137,12 +144,13 @@ function App() {
         onClick={open}
       />
 
-      <div className="px-3 bg-indigo-700 grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 ">
+      <div className="m-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 p-2 rounded-md">
         {renderProductList}
       </div>
       <Modal title="Add A New Product" close={close} isOpen={isOpen}>
         <form className="space-y-3" onSubmit={submitHandler}>
           {renderInputFeilds}
+          <Selector />
           <div className="flex flex-wrap items-center space-x-2 my-2">
             {renderTempColor}
           </div>
@@ -150,7 +158,7 @@ function App() {
             {renderCircleColor}
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 ">
             <Button
               className="text-white p-2  bg-indigo-700 rounded-md w-full "
               children="Submit"

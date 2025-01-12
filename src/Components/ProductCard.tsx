@@ -12,19 +12,21 @@ const ProductCard = ({ product }: Iprops) => {
 
   /**render CircleColors */
   const renderCircleColor = colors.map((color) => (
-    <CircleColor color={color} />
+    <CircleColor color={color} key={color} />
   ));
 
   return (
-    <div className="max-w-sm md:max-w-lg mx-auto border p-2  m-2 md:mx-0 rounded-lg bg-slate-300  ">
+    <div className="max-w-sm md:max-w-lg mx-auto md:mx-0 border rounded-md p-2 flex flex-col space-y-3">
       <Image
-        alt="Product Name"
-        className="rounded-md object-cover"
         imageUrl={imageURL}
+        alt={"Product Name"}
+        className="rounded-md h-52 w-full lg:object-cover"
       />
-      <h3 className="font-medium">{title}</h3>
-      <p className="overflow-hidden">{txtSlicer(description)}</p>
-      <div className="flex items-center space-x-2 my-2">
+      <h3 className="text-lg font-semibold">{title}</h3>
+      <p className="text-sm text-gray-500 break-words">
+        {txtSlicer(description)}
+      </p>
+      <div className="flex items-center flex-wrap space-x-1">
         {renderCircleColor}
       </div>
 
@@ -33,12 +35,12 @@ const ProductCard = ({ product }: Iprops) => {
 
         <Image
           imageUrl={category.imageURL}
-          className="w-10 h-10 rounded-full object-cover cursor-pointer"
+          className="w-10 h-10 rounded-full object-bottom"
           alt={category.name}
         />
       </div>
 
-      <div className="flex items-center justify-around  mt-3 space-x-2 ">
+      <div className="flex items-center justify-between space-x-2 ">
         <Button
           className="text-white p-2 bg-indigo-700 rounded-md w-full"
           children="EDIT"
