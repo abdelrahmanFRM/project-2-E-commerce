@@ -40,5 +40,6 @@ export const productValidation = (product: {
   if (!product.price.trim() || isNaN(Number(product.price))) {
     errors.price = "please enter The correct number";
   }
+
   return errors;
 };

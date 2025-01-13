@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Label,
   Listbox,
@@ -11,19 +10,23 @@ import {
 import { ChevronUpDownIcon } from "@heroicons/react/16/solid";
 import { CheckIcon } from "@heroicons/react/20/solid";
 import { categories } from "../../data";
+import { ICategory } from "../../Interfaces";
 
 
 
 
  
+interface IProps{
+  selected: {name:string, imageURL:string};
+  setSelected: (category:ICategory) => void;
+}
 
 
 
 
 
-
-const Selector = () => {
-  const [selected, setSelected] = useState(categories[0]);
+const Selector = ({selected , setSelected}:IProps) => {
+ 
 console.log(categories)
   console.log(selected)
 

@@ -6,14 +6,27 @@ import CircleColor from "./CircleColor";
 
 interface Iprops {
   product: IProduct;
+  setProductToEdit: (product: IProduct) => void
+  openEditModal: () => void
+  idx: number
+  setProductToEditIdx:(value:number)=>void
 }
-const ProductCard = ({ product }: Iprops) => {
+const ProductCard = ({ product , setProductToEdit,openEditModal , idx ,setProductToEditIdx}: Iprops) => {
   const { imageURL, description, title, price, category, colors } = product;
 
   /**render CircleColors */
   const renderCircleColor = colors.map((color) => (
     <CircleColor color={color} key={color} />
   ));
+
+  /**** Render Edit Product  */
+  const onEdit = () => {
+    setProductToEdit(product)
+    openEditModal();
+    setProductToEditIdx(idx
+
+    )
+  }
 
   return (
     <div className="max-w-sm md:max-w-lg mx-auto md:mx-0 border rounded-md p-2 flex flex-col space-y-3">
@@ -22,7 +35,7 @@ const ProductCard = ({ product }: Iprops) => {
         alt={"Product Name"}
         className="rounded-md h-52 w-full lg:object-cover"
       />
-      <h3 className="text-lg font-semibold">{title}</h3>
+      <h3 className="text-lg font-semibold overflow-hidden">{txtSlicer(title)}</h3>
       <p className="text-sm text-gray-500 break-words">
         {txtSlicer(description)}
       </p>
@@ -44,6 +57,7 @@ const ProductCard = ({ product }: Iprops) => {
         <Button
           className="text-white p-2 bg-indigo-700 rounded-md w-full"
           children="EDIT"
+          onClick={onEdit}
         />
         <Button
           className="text-white p-2  bg-red-700 rounded-md w-full "
