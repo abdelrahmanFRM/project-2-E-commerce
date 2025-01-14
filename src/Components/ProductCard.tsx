@@ -1,5 +1,5 @@
 import { IProduct } from "../Interfaces";
-import { txtSlicer } from "../utilits/funcations";
+import { numberWithCommas, txtSlicer } from "../utilits/funcations";
 import Button from "./ui/Button";
 import Image from "./Image";
 import CircleColor from "./CircleColor";
@@ -9,12 +9,13 @@ interface Iprops {
   setProductToEdit: (product: IProduct) => void
   openEditModal: () => void
   idx: number
-  setProductToEditIdx:(value:number)=>void
+  setProductToEditIdx: (value: number) => void
+  openConfirmModal: () => void;
 }
-const ProductCard = ({ product , setProductToEdit,openEditModal , idx ,setProductToEditIdx}: Iprops) => {
+const ProductCard = ({ product , setProductToEdit,openEditModal , idx ,setProductToEditIdx ,openConfirmModal}: Iprops) => {
   const { imageURL, description, title, price, category, colors } = product;
 
-  /**render CircleColors */
+  /**render CircleColors */ 
   const renderCircleColor = colors.map((color) => (
     <CircleColor color={color} key={color} />
   ));
@@ -26,6 +27,11 @@ const ProductCard = ({ product , setProductToEdit,openEditModal , idx ,setProduc
     setProductToEditIdx(idx
 
     )
+  }
+
+  const onRemove = () => {
+    setProductToEdit(product)
+   openConfirmModal() 
   }
 
   return (
@@ -44,24 +50,27 @@ const ProductCard = ({ product , setProductToEdit,openEditModal , idx ,setProduc
       </div>
 
       <div className="flex items-center justify-between">
-        <h3 className="text-xl">{price}$</h3>
-
+        <h3 className="text-lg text-sky-600">{numberWithCommas(price)}$</h3>
+<div className="flex items-center">
+  <h3 className="mr-2 text-lg">{category.name}</h3>
         <Image
           imageUrl={category.imageURL}
           className="w-10 h-10 rounded-full object-bottom"
           alt={category.name}
-        />
+          />
+          </div>
       </div>
 
       <div className="flex items-center justify-between space-x-2 ">
         <Button
-          className="text-white p-2 bg-indigo-700 rounded-md w-full"
+          className="text-white text-lg p-2 bg-indigo-700 hover:bg-indigo-500 rounded-md w-full"
           children="EDIT"
           onClick={onEdit}
         />
         <Button
-          className="text-white p-2  bg-red-700 rounded-md w-full "
-          children="DELETE"
+          className="text-white text-lg p-2  bg-red-700 hover:bg-red-500 rounded-md w-full "
+          children="Remove"
+          onClick={onRemove}
         />
       </div>
     </div>

@@ -11,6 +11,7 @@ import CircleColor from "./Components/CircleColor.tsx";
 import { v4 as uuid } from "uuid";
 import Selector from "./Components/ui/Selector.tsx";
 import { TProductNames } from "./Types/index.ts";
+import toast, { Toaster } from 'react-hot-toast';
 
 
 function App() {
@@ -37,8 +38,9 @@ function App() {
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [tempColor, setTempColor] = useState<string[]>([]);
+  const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
    const [selectedCategory, setSelectedCategory] = useState(categories[0]);
-  console.log(productToEditIdx);
+ 
 
   const [errors, setErrors] = useState({
     title: "",
@@ -50,6 +52,8 @@ function App() {
   /*------- Handler ----------*/
   const open = () => setIsOpen(true);
   const close = () => setIsOpen(false);
+  const openConfirmModal = () => setIsOpenConfirmModal(true)
+  const closeConfirmModal = () => setIsOpenConfirmModal(false)
   const openEditModal = () => setIsOpenEdit(true);
   const closeEditModal = () => setIsOpenEdit(false);
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -64,6 +68,7 @@ function App() {
     });
   };
 
+ 
   // onChange Handler for Edit ////
 
    const onChangeEditHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -142,8 +147,33 @@ setTempColor([]);
 
   // ** Render Product List **/
   const renderProductList = products.map((product,idx) => (
-    <ProductCard key={product.id} product={product} setProductToEdit={setProductToEdit} openEditModal={openEditModal} idx={idx} setProductToEditIdx={ setProductToEditIdx} />
+    <ProductCard key={product.id} product={product} setProductToEdit={setProductToEdit} openEditModal={openEditModal} idx={idx} setProductToEditIdx={setProductToEditIdx} openConfirmModal={openConfirmModal} />
   ));
+  /**Remove Product From ProductList */
+  const renderProductsAfterRemove = () => {
+    console.log(productToEdit.id)
+    const filtered = products.filter((product) => product.id !== productToEdit.id)
+    setProducts(filtered);
+    closeConfirmModal();
+    toast('the product Deleted Succsseful.', {
+      duration: 4000,
+      position: 'top-center',
+
+      // Styling
+      style: {
+        border: '1px solid #713200',
+      padding: '16px',
+        color: "white",
+        backgroundColor: "black",
+      font:"bold"
+      },
+      className: 'rounded',
+
+      // Custom Icon
+      icon: '👏',
+    })
+  }
+
 
   /**renderInputsFeilds */
   const renderInputFeilds = formInputsList.map((input) => (
@@ -287,6 +317,22 @@ setTempColor([]);
           </div>
         </form>
       </Modal>
+
+{/* Remove Product Modal */}
+      <Modal
+      close={closeConfirmModal} isOpen={isOpenConfirmModal}
+        title="Are you sure you want to remove this Product from your Store?"
+        description="Deleting this product will remove it permanently from your inventory. Any associated data, sales history, and other related information will also be deleted. Please make sure this is the intended action." >
+        <div className="flex items-center space-x-3">
+          <Button className="text-white p-2  bg-red-700 rounded-md w-full" onClick={renderProductsAfterRemove}>
+            Yes, remove
+          </Button>
+          <Button type="button" className="text-white p-2  bg-gray-500 rounded-md w-full" onClick={closeConfirmModal}>
+            Cancel
+          </Button>
+        </div>
+      </Modal>
+<Toaster/>
     </main>
   );
 }
